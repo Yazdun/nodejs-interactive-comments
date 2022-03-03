@@ -13,8 +13,13 @@ const deleteComment = async (req, res) => {
   res.end('delete comment')
 }
 
+const voteComment = async (req, res) => {
+  res.end('upvote comment')
+}
+
 module.exports = {
   createComment,
   updateComment,
   deleteComment,
+  voteComment,
 }
