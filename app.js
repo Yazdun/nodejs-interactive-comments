@@ -14,6 +14,10 @@ const connectDB = require('./db/connect')
 const { authUser } = require('./middleware/authentication')
 
 // ROUTES
+const public_comment_router = require('./routes/public.comment')
+const public_auth_router = require('./routes/public.auth')
+const protected_comment_router = require('./routes/protected.comment')
+const protected_user_router = require('./routes/protected.user')
 
 // ERROR HANDLERS
 const notFoundMiddleware = require('./middleware/not-found')
@@ -34,6 +38,10 @@ app.use(helmet())
 app.use(xss())
 
 // ROUTERS
+app.use('/api/v1/public/comment', public_comment_router)
+app.use('/api/v1/public/auth', public_auth_router)
+app.use('/api/v1/protected/comment', protected_comment_router)
+app.use('/api/v1/protected/user', protected_user_router)
 
 // ERROR HANDLER
 app.use(notFoundMiddleware)
