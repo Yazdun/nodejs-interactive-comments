@@ -28,7 +28,7 @@ app.set('trust proxy', 1)
 app.use(
   rateLimiter({
     windowMs: 15 * 60 * 1000, // 15 minutes
-    max: 1000, // limit each IP to 1000 requests per windowMs
+    max: 100, // limit each IP to 100 requests per windowMs
   }),
 )
 
@@ -40,8 +40,8 @@ app.use(xss())
 // ROUTERS
 app.use('/api/v1/public/comment', public_comment_router)
 app.use('/api/v1/public/auth', public_auth_router)
-app.use('/api/v1/protected/comment', protected_comment_router)
-app.use('/api/v1/protected/user', protected_user_router)
+app.use('/api/v1/protected/comment', authUser, protected_comment_router)
+app.use('/api/v1/protected/user', authUser, protected_user_router)
 
 // ERROR HANDLER
 app.use(notFoundMiddleware)
