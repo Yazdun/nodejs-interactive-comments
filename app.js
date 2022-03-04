@@ -1,7 +1,7 @@
 require('dotenv').config()
 require('express-async-errors')
 
-// EXTRA SECURITY PACKAGES
+// SECURITY PACKAGES
 const helmet = require('helmet')
 const cors = require('cors')
 const xss = require('xss-clean')
@@ -11,6 +11,8 @@ const rateLimiter = require('express-rate-limit')
 const express = require('express')
 const app = express()
 const connectDB = require('./db/connect')
+
+// MIDDLEWARES
 const { authUser } = require('./middleware/authentication')
 
 // ROUTES

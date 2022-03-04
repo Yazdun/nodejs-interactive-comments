@@ -10,6 +10,6 @@ const {
 router.post('/create', createComment)
 router.delete('/delete/:id', deleteComment)
 router.patch('/update/:id', updateComment)
-router.patch('/vote/:commentId', voteComment)
+router.patch('/vote/:id', voteComment)
 
 module.exports = router

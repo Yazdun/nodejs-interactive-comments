@@ -11,6 +11,10 @@ const CommentSchema = new mongoose.Schema(
       type: String,
       required: [true, 'content is required'],
     },
+    isEdited: {
+      type: Boolean,
+      default: false,
+    },
     upvotes: [],
   },
   { timestamps: true },
