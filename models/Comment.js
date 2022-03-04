@@ -16,6 +16,20 @@ const CommentSchema = new mongoose.Schema(
       default: false,
     },
     upvotes: [],
+    tag: {
+      type: mongoose.Types.ObjectId,
+      ref: 'User',
+    },
+    parent: {
+      type: mongoose.Types.ObjectId,
+      ref: 'Comment',
+    },
+    replies: [
+      {
+        type: mongoose.Types.ObjectId,
+        ref: 'Comment',
+      },
+    ],
   },
   { timestamps: true },
 )

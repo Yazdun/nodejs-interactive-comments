@@ -7,14 +7,14 @@ const UserSchema = new mongoose.Schema({
   username: {
     type: String,
     required: [true, 'username is required'],
-    minlength: 3,
-    maxlength: 20,
-    unique: true,
+    minlength: [3, 'username must be at least 3 chars'],
+    maxlength: [20, "username can't be more than 20 chars"],
+    unique: [true, 'this username is already taken'],
     match: [/^[a-zA-Z0-9_.-]*$/, 'username cannot contain space'],
   },
   avatar: {
     type: Number,
-    enum: [1, 2, 3, 4, 6, 7, 8, 9, 10, 11, 12],
+    enum: [[1, 2, 3, 4, 6, 7, 8, 9, 10, 11, 12], 'chosen avatar is not valid'],
     required: [true, 'pick an avatar'],
   },
   password: {

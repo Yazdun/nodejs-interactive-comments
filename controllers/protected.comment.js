@@ -39,10 +39,31 @@ const deleteComment = async (req, res) => {
   const comment = await Comment.findOneAndRemove({
     _id: commentId,
     author: userId,
-  })
+  }).then(() => Comment.deleteMany({ parent: commentId }))
+
   if (!comment) throw new NotFoundError(`this comment doesn't exist`)
 
-  res.status(StatusCodes.OK).send()
+  await res.status(StatusCodes.OK).send()
+}
+
+const replyComment = async (req, res) => {
+  const {
+    params: { id: commentId },
+  } = req
+  const { userId } = req.user
+
+  const parent = await Comment.findOne({ _id: commentId, parent: null })
+  if (!parent) throw new NotFoundError("You can't reply to this comment")
+
+  req.body.author = userId
+  req.body.parent = parent._id
+
+  const reply = await Comment.create(req.body)
+  await parent.updateOne({
+    $push: { replies: reply._id },
+  })
+
+  res.status(StatusCodes.OK).json({ reply })
 }
 
 const voteComment = async (req, res) => {
@@ -82,5 +103,6 @@ module.exports = {
   createComment,
   updateComment,
   deleteComment,
+  replyComment,
   voteComment,
 }
