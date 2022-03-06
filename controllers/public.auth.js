@@ -2,7 +2,7 @@ const { User } = require('../models')
 const { StatusCodes } = require('http-status-codes')
 const { BadRequestError, UnauthenticatedError } = require('../errors')
 
-const join = async (req, res) => {
+const signup = async (req, res) => {
   const usernameExists = await User.findOne({ username: req.body.username })
   if (usernameExists)
     throw new BadRequestError('this username is already taken')
@@ -36,6 +36,6 @@ const login = async (req, res) => {
 }
 
 module.exports = {
-  join,
+  signup,
   login,
 }
