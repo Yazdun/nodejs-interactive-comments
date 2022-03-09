@@ -13,7 +13,7 @@ const app = express()
 const connectDB = require('./db/connect')
 
 // MIDDLEWARES
-const { authUser } = require('./middleware/authentication')
+const { authUser, isLoggedIn } = require('./middleware/authentication')
 
 // ROUTES
 const public_comment_router = require('./routes/public.comment')
@@ -40,7 +40,7 @@ app.use(helmet())
 app.use(xss())
 
 // ROUTERS
-app.use('/api/v1/public/comment', public_comment_router)
+app.use('/api/v1/public/comment', isLoggedIn, public_comment_router)
 app.use('/api/v1/public/auth', public_auth_router)
 app.use('/api/v1/protected/comment', authUser, protected_comment_router)
 app.use('/api/v1/protected/user', authUser, protected_user_router)

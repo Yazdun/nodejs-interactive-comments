@@ -3,7 +3,13 @@ const { StatusCodes } = require('http-status-codes')
 const { Comment } = require('../models')
 
 const getAllComments = async (req, res) => {
-  const comments = await Comment.find({ parent: null })
+  let userId = null
+
+  if (req.user) {
+    userId = req.user.userId
+  }
+
+  const thread = await Comment.find({ parent: null })
     .populate({
       path: 'replies',
       populate: {
@@ -14,15 +20,23 @@ const getAllComments = async (req, res) => {
     })
     .populate('author', ['username', 'avatar'])
     .sort('createdAt')
-  comments.reverse()
+  thread.reverse()
+
+  const comments = thread.map(comment => {
+    const { author, replies, upvotes } = comment
+
+    switch (true) {
+      case String(author._id) === userId:
+        return { ...comment._doc, owner: true }
+
+      default:
+        return comment
+    }
+  })
+
   res.status(StatusCodes.OK).json({ comments })
 }
 
 module.exports = {
   getAllComments,
 }
-
-// .populate({
-//   path: 'replies',
-//   populate: 'author',
-// })

@@ -21,5 +21,25 @@ const authUser = async (req, res, next) => {
     throw new UnauthenticatedError('Authentication invalid')
   }
 }
+const isLoggedIn = async (req, res, next) => {
+  // check header
+  const authHeader = req.headers.authorization
+  if (!authHeader || !authHeader.startsWith('Bearer')) {
+    return next()
+  }
+  const token = authHeader.split(' ')[1]
 
-module.exports = { authUser }
+  try {
+    const payload = jwt.verify(token, process.env.JWT_SECRET)
+    // attach the user to the routes
+    req.user = {
+      userId: payload.userId,
+      username: payload.username,
+    }
+    next()
+  } catch (error) {
+    return next()
+  }
+}
+
+module.exports = { authUser, isLoggedIn }
