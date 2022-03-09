@@ -14,7 +14,10 @@ const UserSchema = new mongoose.Schema({
   },
   avatar: {
     type: Number,
-    enum: [[1, 2, 3, 4, 6, 7, 8, 9, 10, 11, 12], 'chosen avatar is not valid'],
+    enum: [
+      [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11],
+      'chosen avatar is not valid',
+    ],
     required: [true, 'pick an avatar'],
   },
   password: {

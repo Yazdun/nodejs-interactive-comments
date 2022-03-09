@@ -1,5 +1,5 @@
 const { StatusCodes } = require('http-status-codes')
-const { UnauthenticatedError } = require('../errors')
+const { UnauthenticatedError, BadRequestError } = require('../errors')
 const { validatePasswordStrength } = require('../utils')
 const { User } = require('../models')
 
@@ -12,8 +12,14 @@ const getUser = async (req, res) => {
 }
 
 const updateUser = async (req, res) => {
-  const { password } = req.body
+  const { password, username } = req.body
   const { userId } = req.user
+
+  const isExist = await User.findOne({ username })
+
+  if (isExist && String(isExist._id) !== userId) {
+    throw new BadRequestError('this username is already taken')
+  }
 
   if (password) {
     validatePasswordStrength(password)
@@ -34,7 +40,7 @@ const updateUser = async (req, res) => {
 
   res
     .status(StatusCodes.OK)
-    .json({ user: { username: user.username, userId: user._id }, token })
+    .json({ user: { username: user.username, avatar: user.avatar }, token })
 }
 
 module.exports = {

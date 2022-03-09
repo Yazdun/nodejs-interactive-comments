@@ -9,9 +9,10 @@ const signup = async (req, res) => {
 
   const user = await User.create({ ...req.body })
   const token = user.createJWT()
-  res
-    .status(StatusCodes.CREATED)
-    .json({ user: { username: user.username, userId: user._id }, token })
+  res.status(StatusCodes.CREATED).json({
+    user: { username: user.username, avatar: user.avatar },
+    token,
+  })
 }
 
 const login = async (req, res) => {
@@ -30,7 +31,7 @@ const login = async (req, res) => {
 
   const token = user.createJWT()
   res.status(StatusCodes.OK).json({
-    user: { username: user.username, userId: user._id },
+    user: { username: user.username, avatar: user.avatar },
     token,
   })
 }
