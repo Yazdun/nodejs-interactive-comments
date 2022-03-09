@@ -28,14 +28,14 @@ const getAllComments = async (req, res) => {
 
     const replies = commentReplies.map(reply => {
       const upvoted = reply.upvotes.includes(userId)
-      if (String(reply.author._id) === userId) {
+      if (reply.author && String(reply.author._id) === userId) {
         return { ...reply._doc, owner: true, upvoted }
       }
-      return { ...reply, _doc, upvoted }
+      return { ...reply._doc, upvoted }
     })
 
     switch (true) {
-      case String(author._id) === userId:
+      case author && String(author._id) === userId:
         return { ...comment._doc, owner: true, replies, upvoted }
 
       default:

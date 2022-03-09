@@ -38,7 +38,7 @@ const isLoggedIn = async (req, res, next) => {
     }
     next()
   } catch (error) {
-    return next()
+    console.log(error)
   }
 }
 

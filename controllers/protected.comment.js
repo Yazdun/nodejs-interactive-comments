@@ -5,8 +5,11 @@ const { Comment } = require('../models')
 const createComment = async (req, res) => {
   const { userId } = req.user
   req.body.author = userId
-  const comment = await Comment.create(req.body)
-  res.status(StatusCodes.CREATED).json({ comment })
+  let comment = await Comment.create(req.body)
+  comment = await comment.populate('author')
+  res
+    .status(StatusCodes.CREATED)
+    .json({ comment: { ...comment._doc, owner: true } })
 }
 
 const updateComment = async (req, res) => {
