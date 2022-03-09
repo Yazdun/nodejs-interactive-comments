@@ -1,5 +1,4 @@
 const { StatusCodes } = require('http-status-codes')
-// const { BadRequestError, NotFoundError } = require('../errors')
 const { Comment } = require('../models')
 
 const getAllComments = async (req, res) => {
@@ -23,14 +22,24 @@ const getAllComments = async (req, res) => {
   thread.reverse()
 
   const comments = thread.map(comment => {
-    const { author, replies, upvotes } = comment
+    const { author, replies: commentReplies, upvotes } = comment
+
+    const upvoted = upvotes.includes(userId)
+
+    const replies = commentReplies.map(reply => {
+      const upvoted = reply.upvotes.includes(userId)
+      if (String(reply.author._id) === userId) {
+        return { ...reply._doc, owner: true, upvoted }
+      }
+      return { ...reply, _doc, upvoted }
+    })
 
     switch (true) {
       case String(author._id) === userId:
-        return { ...comment._doc, owner: true }
+        return { ...comment._doc, owner: true, replies, upvoted }
 
       default:
-        return comment
+        return { ...comment._doc, replies, upvoted }
     }
   })
 

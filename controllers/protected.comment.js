@@ -75,9 +75,6 @@ const voteComment = async (req, res) => {
   const comment = await Comment.findOne({ _id: commentId })
   if (!comment) throw new NotFoundError("this comment doesn't exist")
 
-  if (String(comment.author) === userId)
-    throw new BadRequestError("you can't upvote your own comment")
-
   if (!comment.upvotes.includes(userId)) {
     await comment.updateOne({
       $push: { upvotes: userId },
