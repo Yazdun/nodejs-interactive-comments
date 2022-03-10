@@ -83,7 +83,7 @@ const upvote = async (req, res) => {
       { _id: commentId },
       {
         $push: { upvotes: userId },
-        $pull: { downvote: userId },
+        $pull: { downvotes: userId },
       },
       { new: true, runValidators: true },
     )
@@ -105,6 +105,7 @@ const upvote = async (req, res) => {
     res.status(StatusCodes.OK).json({
       votes: votedComment.upvotes.length - votedComment.downvotes.length,
       upvoted: false,
+      downvoted: false,
     })
   }
 }
@@ -137,7 +138,7 @@ const downvote = async (req, res) => {
     const votedComment = await Comment.findByIdAndUpdate(
       { _id: commentId },
       {
-        $pull: { downvote: userId },
+        $pull: { downvotes: userId },
       },
       { new: true, runValidators: true },
     )
@@ -145,6 +146,7 @@ const downvote = async (req, res) => {
     res.status(StatusCodes.OK).json({
       votes: votedComment.upvotes.length - votedComment.downvotes.length,
       downvoted: false,
+      upvoted: false,
     })
   }
 }

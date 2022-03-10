@@ -26,21 +26,32 @@ const getAllComments = async (req, res) => {
 
     const upvoted = upvotes.includes(userId)
     const downvoted = downvotes.includes(userId)
+    const votesCount = upvotes.length - downvotes.length
 
     const replies = commentReplies.map(reply => {
       const upvoted = reply.upvotes.includes(userId)
+      const downvoted = reply.downvotes.includes(userId)
+      const votesCount = reply.upvotes.length - reply.downvotes.length
+
       if (reply.author && String(reply.author._id) === userId) {
-        return { ...reply._doc, owner: true, upvoted }
+        return { ...reply._doc, owner: true, upvoted, downvoted, votesCount }
       }
-      return { ...reply._doc, upvoted }
+      return { ...reply._doc, upvoted, downvoted, votesCount }
     })
 
     switch (true) {
       case author && String(author._id) === userId:
-        return { ...comment._doc, owner: true, replies, upvoted, downvoted }
+        return {
+          ...comment._doc,
+          owner: true,
+          replies,
+          upvoted,
+          downvoted,
+          votesCount,
+        }
 
       default:
-        return { ...comment._doc, replies, upvoted, downvoted }
+        return { ...comment._doc, replies, upvoted, downvoted, votesCount }
     }
   })
 
