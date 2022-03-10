@@ -8,17 +8,7 @@ const getAllComments = async (req, res) => {
     userId = req.user.userId
   }
 
-  const thread = await Comment.find({ parent: null })
-    .populate({
-      path: 'replies',
-      populate: {
-        path: 'author',
-        model: 'User',
-        select: 'username avatar',
-      },
-    })
-    .populate('author', ['username', 'avatar'])
-    .sort('createdAt')
+  let thread = await Comment.find({ parent: null }).sort('createdAt')
   thread.reverse()
 
   const comments = thread.map(comment => {

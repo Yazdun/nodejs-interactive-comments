@@ -55,7 +55,7 @@ const replyComment = async (req, res) => {
   } = req
   const { userId } = req.user
 
-  const parent = await Comment.findOne({ _id: commentId, parent: null })
+  const parent = await Comment.findOne({ _id: commentId })
   if (!parent) throw new NotFoundError("You can't reply to this comment")
 
   req.body.author = userId
