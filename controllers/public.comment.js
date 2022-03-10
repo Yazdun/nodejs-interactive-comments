@@ -22,9 +22,10 @@ const getAllComments = async (req, res) => {
   thread.reverse()
 
   const comments = thread.map(comment => {
-    const { author, replies: commentReplies, upvotes } = comment
+    const { author, replies: commentReplies, upvotes, downvotes } = comment
 
     const upvoted = upvotes.includes(userId)
+    const downvoted = downvotes.includes(userId)
 
     const replies = commentReplies.map(reply => {
       const upvoted = reply.upvotes.includes(userId)
@@ -36,10 +37,10 @@ const getAllComments = async (req, res) => {
 
     switch (true) {
       case author && String(author._id) === userId:
-        return { ...comment._doc, owner: true, replies, upvoted }
+        return { ...comment._doc, owner: true, replies, upvoted, downvoted }
 
       default:
-        return { ...comment._doc, replies, upvoted }
+        return { ...comment._doc, replies, upvoted, downvoted }
     }
   })
 

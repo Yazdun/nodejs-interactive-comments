@@ -69,7 +69,7 @@ const replyComment = async (req, res) => {
   res.status(StatusCodes.OK).json({ reply })
 }
 
-const voteComment = async (req, res) => {
+const upvote = async (req, res) => {
   const {
     params: { id: commentId },
   } = req
@@ -79,22 +79,72 @@ const voteComment = async (req, res) => {
   if (!comment) throw new NotFoundError("this comment doesn't exist")
 
   if (!comment.upvotes.includes(userId)) {
-    await comment.updateOne({
-      $push: { upvotes: userId },
-    })
-    comment.upvotes.push(userId)
-    res.status(StatusCodes.OK).json({
-      upvotes: comment.upvotes,
-    })
-  } else {
-    await comment.updateOne({
-      $pull: { upvotes: userId },
-    })
+    const votedComment = await Comment.findByIdAndUpdate(
+      { _id: commentId },
+      {
+        $push: { upvotes: userId },
+        $pull: { downvote: userId },
+      },
+      { new: true, runValidators: true },
+    )
 
     res.status(StatusCodes.OK).json({
-      upvotes: comment.upvotes.filter(upvote => {
-        return upvote !== userId
-      }),
+      votes: votedComment.upvotes.length - votedComment.downvotes.length,
+      upvoted: true,
+      downvoted: false,
+    })
+  } else {
+    const votedComment = await Comment.findByIdAndUpdate(
+      { _id: commentId },
+      {
+        $pull: { upvotes: userId },
+      },
+      { new: true, runValidators: true },
+    )
+
+    res.status(StatusCodes.OK).json({
+      votes: votedComment.upvotes.length - votedComment.downvotes.length,
+      upvoted: false,
+    })
+  }
+}
+
+const downvote = async (req, res) => {
+  const {
+    params: { id: commentId },
+  } = req
+  const { userId } = req.user
+
+  const comment = await Comment.findOne({ _id: commentId })
+  if (!comment) throw new NotFoundError("this comment doesn't exist")
+
+  if (!comment.downvotes.includes(userId)) {
+    const votedComment = await Comment.findByIdAndUpdate(
+      { _id: commentId },
+      {
+        $push: { downvotes: userId },
+        $pull: { upvotes: userId },
+      },
+      { new: true, runValidators: true },
+    )
+
+    res.status(StatusCodes.OK).json({
+      votes: votedComment.upvotes.length - votedComment.downvotes.length,
+      downvoted: true,
+      upvoted: false,
+    })
+  } else {
+    const votedComment = await Comment.findByIdAndUpdate(
+      { _id: commentId },
+      {
+        $pull: { downvote: userId },
+      },
+      { new: true, runValidators: true },
+    )
+
+    res.status(StatusCodes.OK).json({
+      votes: votedComment.upvotes.length - votedComment.downvotes.length,
+      downvoted: false,
     })
   }
 }
@@ -104,5 +154,6 @@ module.exports = {
   updateComment,
   deleteComment,
   replyComment,
-  voteComment,
+  upvote,
+  downvote,
 }

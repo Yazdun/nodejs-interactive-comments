@@ -16,6 +16,7 @@ const CommentSchema = new mongoose.Schema(
       default: false,
     },
     upvotes: [],
+    downvotes: [],
     tag: {
       type: mongoose.Types.ObjectId,
       ref: 'User',
