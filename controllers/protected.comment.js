@@ -61,12 +61,14 @@ const replyComment = async (req, res) => {
   req.body.author = userId
   req.body.parent = parent._id
 
-  const reply = await Comment.create(req.body)
+  let comment = await Comment.create(req.body)
+  comment = await comment.populate('author')
+
   await parent.updateOne({
-    $push: { replies: reply._id },
+    $push: { replies: comment._id },
   })
 
-  res.status(StatusCodes.OK).json({ reply })
+  res.status(StatusCodes.OK).json({ comment })
 }
 
 const upvote = async (req, res) => {
