@@ -18,7 +18,7 @@ const updateComment = async (req, res) => {
   } = req
   const { userId } = req.user
 
-  const comment = await Comment.findOneAndUpdate(
+  let comment = await Comment.findOneAndUpdate(
     {
       _id: commentId,
       author: userId,
@@ -30,7 +30,9 @@ const updateComment = async (req, res) => {
     },
   )
   if (!comment) throw new NotFoundError(`this comment doesn't exist`)
-  res.status(StatusCodes.OK).json({ comment })
+  comment = await comment.populate('author')
+
+  res.status(StatusCodes.OK).json({ comment: { ...comment._doc, owner: true } })
 }
 
 const deleteComment = async (req, res) => {
