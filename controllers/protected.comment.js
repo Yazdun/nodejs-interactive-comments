@@ -70,7 +70,7 @@ const replyComment = async (req, res) => {
     $push: { replies: comment._id },
   })
 
-  res.status(StatusCodes.OK).json({ comment })
+  res.status(StatusCodes.OK).json({ comment: { ...comment._doc, owner: true } })
 }
 
 const upvote = async (req, res) => {
