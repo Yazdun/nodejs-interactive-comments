@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" href="./assets/favicon.png" />
+    <link rel="stylesheet" href="./styles.css" />
+
+    <title>Comments API</title>
+  </head>
+  <body>
+    <header>
+      <div>
+        <h1>COMMENTS API</h1>
+        <a
+          href="https://github.com/Yazdun/nodejs-interactive-comments"
+          target="_blank"
+          >source code</a
+        >
+      </div>
+      <img src="./assets/cartoon.svg" alt="celebration emoji" />
+    </header>
+
+    <hr />
+    <div class="container base">
+      <h2>base url</h2>
+      <p>https://nodejs-interactive-comments.herokuapp.com/</p>
+    </div>
+
+    <div id="protected" class="container">
+      <h2>protected routes</h2>
+    </div>
+
+    <hr />
+    <div id="public" class="container">
+      <h2>public routes</h2>
+    </div>
+
+    <script src="./endpoints/publicEndpoints.js"></script>
+    <script src="./endpoints/adminEndpoints.js"></script>
+    <script src="./endpoints/protectedEndpoints.js"></script>
+    <script src="./app.js"></script>
+  </body>
+</html>

@@ -39,6 +39,8 @@ app.use(express.json())
 app.use(helmet())
 app.use(xss())
 
+app.use('/', express.static('docs'))
+
 // ROUTERS
 app.use('/api/v1/public/comment', isLoggedIn, public_comment_router)
 app.use('/api/v1/public/auth', public_auth_router)
